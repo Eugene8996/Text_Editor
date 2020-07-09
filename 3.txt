@@ -3,3 +3,4 @@ on the given window. It is similar to calling waddch once for each character in 
 The four routines with n as the last argument write at most n characters. 
 If n is -1, then the entire string will be added, up to the maximum number of 
 characters that will fit on the line, or until a terminating null is reached. 
+1
