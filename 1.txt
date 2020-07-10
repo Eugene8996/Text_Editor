@@ -1,4 +1,4 @@
-Hello, DOOM!
-30
 Hello, world!
+123456
+DOOM!
 2
