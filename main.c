@@ -134,8 +134,11 @@ void open_file(file_info* file)
             addstr("Cant create file\n");
             refresh();
         }
-        file->size = sizeof(char)*1024;
-        file->data = calloc(1024, file->size);
+        file->line_index_total = 1;
+        file->line_index[0] = 1;
+        file->data = (char **)calloc(1024, sizeof(char *));
+        file->size = sizeof(char)*1;
+        file->data[0] = calloc(1, file->size);
         addstr("Press any key...\n");
         refresh();
         getchar();
@@ -149,7 +152,6 @@ void open_file(file_info* file)
     buffer = malloc(file->size + 1);
     fread(buffer, 1, file->size, fp);
     buffer[file->size] = 0;
-
 
     for (i = 0; i <= file->size; i++)
     {
@@ -172,9 +174,7 @@ void open_file(file_info* file)
         }
     }
 
-    
     file->data = (char **)calloc(file->line_index_total, sizeof(char *));
-
 
     //write to two-dimensional array
     j = 0;
@@ -212,7 +212,6 @@ void open_file(file_info* file)
     fclose(fp);
 }
 
-
 void refresh_data(file_info* file, unsigned* y, unsigned* x, int user_char)
 {
     size_t line_size;
@@ -245,6 +244,15 @@ void refresh_data(file_info* file, unsigned* y, unsigned* x, int user_char)
     //handle key enter
     if (user_char == '\n')
     {
+        if (*x == file->line_index[*y])
+        {
+            file->data[*y][*x] = '\n';
+            file->data[*y+1] = calloc(2, sizeof(char));
+            file->line_index_total = file->line_index_total + 1;
+            file->line_index[*y] = *x;
+            return;
+        }
+
         for(i = file->line_index_total - 1; i > *y; i--)
         {
             line_size = strlen(file->data[i]);
