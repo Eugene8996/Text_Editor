@@ -155,18 +155,39 @@ void refresh_data(file_info* file, unsigned* y, unsigned* x, int user_char)
                 *x = *x - 1;
             free(buffer);
         }
-        /*else
+        else
         {
             if (*y != 0)
             {
-                line_size = strlen(file->data[*y-1]);
-                buffer = calloc(line_size - 2, sizeof(char));
+                line_size = strlen(file->data[*y-1]) - 1;
+                buffer = calloc(line_size, sizeof(char));
                 memcpy(buffer, file->data[*y-1], line_size);
                 free(file->data[*y-1]);
-                line_size = strlen(file->data[*y]) + strlen(buffer);
-                file->data[*y-1] = calloc(line_size, sizeof(char));
+                file->data[*y-1] = calloc(line_size + strlen(file->data[*y]), sizeof(char));
+                memcpy(file->data[*y-1], buffer, line_size);
+                memcpy(&file->data[*y-1][line_size], file->data[*y], strlen(file->data[*y]));
+                //file->line_index_total = file->line_index_total - 1;
+                file->line_index[*y-1] = line_size + strlen(file->data[*y]) - 1;
+                free(buffer);
+                free(file->data[*y]);
+                file->line_index_total = file->line_index_total - 1;
+
+                for(i = *y; i < file->line_index_total; i++)
+                {
+                    line_size = strlen(file->data[i+1]);
+                    file->data[i] = calloc(line_size, sizeof(char));
+                    memcpy(file->data[i], file->data[i+1], line_size);
+                    file->line_index[i] = file->line_index[i+1];
+                    free(file->data[i+1]);
+                }
+                if (*y == file->line_index_total)
+                {
+                    (*y)--;
+                    *x = file->line_index[*y];
+                }
+                
             }
-        }*/
+        }
         return;
     }
 
