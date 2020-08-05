@@ -1,14 +1,16 @@
 EXEC := exec
-SRC := main.c
-SRC_OBJ := main.o
 
-L_FLAGS := -lncurses
+L_FLAGS := -lncurses -L.
 
-all: 
-	gcc -std=c99 -c $(SRC) -o $(SRC_OBJ)
-	gcc -std=c99 $(SRC_OBJ) -o $(EXEC) $(L_FLAGS)
+all: $(patsubst %.c,%.o,$(wildcard *.c))
+	gcc -g $^ -o $(EXEC) $(L_FLAGS)
+
+%.o: %.c
+	gcc -g -c $(wildcard *.c) $(L_FLAGS)
 
 clean:
-	rm -f $(EXEC) $(SRC_OBJ)
+	rm -f *.o $(EXEC)
 
 # -g -Wall -Werror
+
+

@@ -29,7 +29,7 @@ void open_file(file_info* file)
             refresh();
         }
         file->line_index_total = 1;
-        file->line_index[0] = 1;
+        file->line_index[0] = 0;
         file->data = (char **)calloc(1024, sizeof(char *));
         file->size = sizeof(char)*1;
         file->data[0] = calloc(1, file->size);
@@ -155,6 +155,18 @@ void refresh_data(file_info* file, unsigned* y, unsigned* x, int user_char)
                 *x = *x - 1;
             free(buffer);
         }
+        /*else
+        {
+            if (*y != 0)
+            {
+                line_size = strlen(file->data[*y-1]);
+                buffer = calloc(line_size - 2, sizeof(char));
+                memcpy(buffer, file->data[*y-1], line_size);
+                free(file->data[*y-1]);
+                line_size = strlen(file->data[*y]) + strlen(buffer);
+                file->data[*y-1] = calloc(line_size, sizeof(char));
+            }
+        }*/
         return;
     }
 
@@ -191,7 +203,6 @@ void refresh_data(file_info* file, unsigned* y, unsigned* x, int user_char)
         buffer = calloc(line_size + 1, sizeof(char));
         memcpy(buffer, file->data[*y], line_size);
         buffer[line_size] = '\n';
-        free(file->data[*y]);
         file->data[*y] = calloc(line_size + 2, sizeof(char));
         memcpy(file->data[*y], buffer, line_size + 1);
 

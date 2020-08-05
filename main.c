@@ -1,29 +1,19 @@
 #include <ncurses.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
+//#include <ctype.h>
 #include <string.h>
 
-typedef struct 
-{
-    char** data;
-    size_t size;
-    char path[1024];
-    unsigned line_index_total;
-    unsigned line_index[1024];
+#include "edit_file.h"
+#include "graph.h"
 
-} file_info;
-
-void open_file(file_info* file);
-void refresh_data(file_info* file, unsigned* y, unsigned* x, int user_char);
-void save_file(file_info* file);
 
 int main()
 {
     file_info file;
     file.line_index_total = 0;
     unsigned exit = 0;
-    unsigned y = 0, x = 0;
+    int y = 0, x = 0;
     unsigned i = 0;
     unsigned max_row, max_col;
     int user_char;
@@ -38,7 +28,16 @@ int main()
 
     while (true)
     {
-        getmaxyx(stdscr, max_row, max_col);
+        
+        print_data(&file, &max_row, &max_col, &y, &x);
+        user_char = getch();
+        cursor_handler(&file, user_char, &y, &x, &exit, &max_row, &max_col);
+        
+        clear();
+        if (exit == 1)
+            break;
+
+        /*getmaxyx(stdscr, max_row, max_col);
 
         for (i = 0; i < file.line_index_total; i++)
         {
@@ -105,7 +104,7 @@ int main()
 
         clear();
         if (exit == 1)
-            break;
+            break;*/
     }
     refresh();
 
@@ -114,6 +113,7 @@ int main()
     return 0;
 }
 
+/*
 void open_file(file_info* file)
 {
     FILE *fp;
@@ -210,8 +210,8 @@ void open_file(file_info* file)
 
     free(buffer);
     fclose(fp);
-}
-
+}*/
+/*
 void refresh_data(file_info* file, unsigned* y, unsigned* x, int user_char)
 {
     size_t line_size;
@@ -298,8 +298,9 @@ void refresh_data(file_info* file, unsigned* y, unsigned* x, int user_char)
     *x = *x + 1;
     return;
 
-}
+}*/
 
+/*
 void save_file(file_info* file)
 {
     FILE *fp;
@@ -320,4 +321,4 @@ void save_file(file_info* file)
     addstr("Press any key...\n");
     refresh();
     getchar();
-}
+}*/
